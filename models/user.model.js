@@ -30,9 +30,9 @@ const User = mongoose.model("User",userSchema);
 
 export default User;
 
-// SCHEMA will look like this:
+// SCHEMA
 // {
-// name: "Dean Winchester", 
-// mail: "impala1967@gmail.com", 
-// password: "CarryonWaywardSon1967"
+// name: "Ulfric Stormcloak", 
+// mail: "LordOfWindhelm@gmail.com", 
+// password: "YsgramorsAxe1922"
 // }

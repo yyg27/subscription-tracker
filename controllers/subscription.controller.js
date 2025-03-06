@@ -78,3 +78,73 @@ export const getSubscriptionDetails = async (req, res, next) => {
     next(error);
   }
 };
+//---
+export const updateSubscription = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updatedSubscription = req.body;
+
+    const updateSubs = await Subscription.findByIdAndUpdate(
+      id,
+      updatedSubscription,
+      { new: true }
+    );
+
+    if (!updateSubs) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Subscription not found" });
+    }
+
+    res.status(200).json({ succes: true, data: updateSubs });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteSubscription = async (req,res,next) => {
+  try{
+    const { id } = req.params;
+
+    const deleteSubs = await Subscription.findByIdAndDelete(id);
+
+    if(!deleteSubs){
+      return res
+        .status(404)
+        .json({ success: false, message: "Subscription not found" });
+    }
+
+    //data is an empty object because we are not returning any data
+    res.status(200).json({ success: true, data: {} });
+
+  }catch(error){
+    next(error);
+  }
+};
+
+export const cancelSubscription = async (req, res, next) => {
+  try{
+    const {id} = req.params; 
+    //we updated the subscription's status to cancelled
+    const canceledSubs = await Subscription.findByIdAndUpdate(
+      id,
+      { status: "cancelled" },
+      { new: true }
+    );
+
+     // If subscription not found, return a 404 error
+     if (!canceledSubscription) {
+      return res.status(404).json({ message: "Subscription not found" });
+    }
+
+    res.status(200).json({
+      message: "Subscription canceled successfully",
+      subscription: canceledSubs,
+    });
+
+  }catch(error){
+    next(error);
+  }
+};
+
+export const getUpcomingRenewals = async (req, res, next) => {};

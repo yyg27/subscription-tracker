@@ -26,10 +26,10 @@ app.use('/api/v1/workflow',workflowRouter);
 app.use(errorMiddleware);
 
 app.get('/',(req,res) => {
-    res.send('Hello World');
+    res.send("HELLO WORLD");
 })
 
 app.listen(PORT, async() => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`); 
     await connectToDatabase(); // we made this async because connectToDatabase is async and uses await
 }) 
