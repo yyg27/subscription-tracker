@@ -8,6 +8,7 @@ import {
   getSubscriptionDetails,
   getUserSubscriptions,
   updateSubscription,
+  getUpcomingRenewals
 } from "../controllers/subscription.controller.js";
 
 const subscriptionRouter = Router();
@@ -26,8 +27,6 @@ subscriptionRouter.get("/user/:id", authorize, getUserSubscriptions); // GET USE
 
 subscriptionRouter.put("/:id/cancel",authorize,cancelSubscription);//CANCEL SUBSCRIPTION
 
-subscriptionRouter.get("/upcoming-renewals", (reg, res) =>  //SHOW UPCOMING RENEWALS
-  res.send({ title: "GET upcoming renewals" })
-);
+subscriptionRouter.get("/upcoming-renewals", authorize, getUpcomingRenewals);
 
 export default subscriptionRouter;

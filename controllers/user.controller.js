@@ -26,3 +26,49 @@ export const getUser = async (req, res) => {
     next(error);
   }
 };
+
+export const createUser = async (req,res) => {
+  try{
+    const user = await User.create(req.body);
+
+    res.status(201).json({succes: true, data: user});
+  }catch(error){
+    next(error);
+  }
+}
+
+export const updateUser = async (req,res) => {
+  try{
+    const user = await User.findByIdAndUpdate(req.params.id,req.body,{
+      new: true,
+      runValidators: true
+    });
+
+    if(!user){
+      const error = new Error("User not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.status(200).json({succes: true, data: user});
+
+  }catch(error){
+    next(error);
+  }
+}
+
+export const deleteUser = async(req,res) => {
+  try{
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if(!user){
+      const error = new Error("User not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.status(200).json({succes: true, data: {}});
+  }catch(error){
+    next(error);
+  }
+}
