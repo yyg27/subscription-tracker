@@ -103,10 +103,10 @@ function Dashboard() {
   };
 
   return (
-    <div className="font-sans flex items-center justify-center p-4 sm:p-8 lg:p-14 antialiased min-h-screen">
+    <div className="font-sans flex items-center justify-center sm:p-8 lg:p-14 antialiased min-h-screen">
       
       {/* Main Dashboard Container */}
-      <div className="w-full max-w-5xl bg-app-screen rounded-[44px] shadow-phone ring-1 ring-white/10 p-6 md:p-10 text-white flex flex-col xl:flex-row gap-10">
+      <div className="w-full h-full min-h-[100dvh] sm:min-h-0 max-w-5xl bg-app-screen sm:rounded-[44px] sm:shadow-phone sm:ring-1 sm:ring-white/10 p-6 pt-16 md:p-10 text-white flex flex-col xl:flex-row gap-10">
         
         {/* LEFT COLUMN: Add Subscription Form */}
         <div className="w-full xl:w-1/3 flex flex-col">
