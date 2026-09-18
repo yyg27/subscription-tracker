@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 
 import { PORT } from './config/env.js';
 
@@ -12,6 +13,7 @@ import workflowRouter from './routes/workflow.routes.js';
 
 const app = express();
 
+app.use(cors()); // Allow frontend to talk to backend
 app.use(express.json()); // built-in middleware to use json
 app.use(express.urlencoded({extended:false})); // 
 app.use(arcjetMiddleware)
