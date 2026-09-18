@@ -9,14 +9,22 @@ export const createSubscription = async (req, res, next) => {
       user: req.user._id,
     });
 
-    const { workflowRunId } = await workflowClient.trigger({
-      url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
-      body: { subscriptionId: subscription._id },
-      headers: {
-        "content-type": "application/json",
-      },
-      retries: 0,
-    });
+    //Trigger the workflow 
+    try {
+      const { workflowRunId } = await workflowClient.trigger({
+        url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
+        body: {
+          subscriptionId: subscription._id,
+        },
+        headers: {
+          "content-type": "application/json",
+        },
+        retries: 0,
+      });
+      console.log(`Workflow triggered: ${workflowRunId}`);
+    } catch (workflowError) {
+      console.error("Upstash Workflow Error (Ignored):", workflowError.message);
+    }
 
     res.status(201).json({ success: true, data: subscription }); 
   } catch (error) {
@@ -109,15 +117,15 @@ export const deleteSubscription = async (req,res,next) => {
   try{
     const { id } = req.params;
 
-    const deleteSubs = await Subscription.findByIdAndDelete(id);
+    // SECURITY FIX: Make sure the subscription belongs to the logged-in user
+    const deleteSubs = await Subscription.findOneAndDelete({ _id: id, user: req.user._id });
 
     if(!deleteSubs){
       return res
         .status(404)
-        .json({ success: false, message: "Subscription not found" });
+        .json({ success: false, message: "Subscription not found or unauthorized" });
     }
 
-    //data is an empty object because we are not returning any data
     res.status(200).json({ success: true, data: {} });
 
   }catch(error){
