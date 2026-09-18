@@ -38,8 +38,8 @@ const subscriptionSchema = mongoose.Schema(
     },
     paymentMethod: {
       type: String,
+      required: false,
       trim: true,
-      required: true,
     },
     status: {
       type: String,

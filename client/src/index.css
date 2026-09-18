@@ -38,3 +38,14 @@ input:focus {
   outline: none;
   box-shadow: 0 0 0 1.5px rgba(158, 245, 76, 0.4);
 }
+
+/* Hide number input spinners for modern UI */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}

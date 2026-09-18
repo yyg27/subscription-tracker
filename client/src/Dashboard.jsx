@@ -175,7 +175,6 @@ function Dashboard() {
               placeholder={t('paymentMethod')} 
               value={paymentMethod} 
               onChange={e => setPaymentMethod(e.target.value)} 
-              required 
               className="w-full bg-app-inputBg text-white text-[13px] px-5 py-3.5 rounded-full border-none transition-colors hover:bg-app-inputHover focus:ring-1 focus:ring-app-lime focus:outline-none"
             />
             
@@ -265,7 +264,7 @@ function Dashboard() {
                     <div className="mt-auto pt-4 border-t border-app-line flex justify-between items-center text-[11px] font-medium">
                       <div className="flex items-center gap-1.5">
                         <div className={`w-2 h-2 rounded-full ${sub.status === 'active' ? 'bg-[#34c759]' : 'bg-[#ff453a]'}`}></div>
-                        <span className="text-white capitalize">{sub.status}</span>
+                        <span className="text-white capitalize">{t(sub.status)}</span>
                       </div>
                       <span className="text-app-subtext">
                         {t('nextRenewal')}: <span className="text-white">{new Date(sub.renewalDate).toLocaleDateString()}</span>
