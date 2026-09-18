@@ -41,20 +41,20 @@ function Register() {
   };
 
   return (
-    <div className="font-sans flex items-center justify-center p-4 sm:p-8 lg:p-14 antialiased select-none h-full min-h-screen">
+    <div className="font-sans flex items-center justify-center sm:p-8 lg:p-14 antialiased select-none min-h-screen">
       
-      <div className="relative group">
-        <div className="relative w-[340px] sm:w-[365px] h-[730px] rounded-[52px] bg-app-phoneChassis p-[10px] shadow-phone ring-1 ring-white/10">
+      <div className="relative group w-full h-[100dvh] sm:w-[365px] sm:h-[730px]">
+        <div className="relative w-full h-full sm:rounded-[52px] sm:bg-app-phoneChassis sm:p-[10px] sm:shadow-phone sm:ring-1 sm:ring-white/10">
           
-          <div className="absolute -left-[3px] top-[108px] w-[3px] h-[24px] bg-[#3a3b3f] rounded-l-sm"></div>
-          <div className="absolute -left-[3px] top-[148px] w-[3px] h-[44px] bg-[#3a3b3f] rounded-l-sm"></div>
-          <div className="absolute -left-[3px] top-[204px] w-[3px] h-[44px] bg-[#3a3b3f] rounded-l-sm"></div>
-          <div className="absolute -right-[3px] top-[160px] w-[3px] h-[64px] bg-[#3a3b3f] rounded-r-sm"></div>
+          <div className="hidden sm:block absolute -left-[3px] top-[108px] w-[3px] h-[24px] bg-[#3a3b3f] rounded-l-sm"></div>
+          <div className="hidden sm:block absolute -left-[3px] top-[148px] w-[3px] h-[44px] bg-[#3a3b3f] rounded-l-sm"></div>
+          <div className="hidden sm:block absolute -left-[3px] top-[204px] w-[3px] h-[44px] bg-[#3a3b3f] rounded-l-sm"></div>
+          <div className="hidden sm:block absolute -right-[3px] top-[160px] w-[3px] h-[64px] bg-[#3a3b3f] rounded-r-sm"></div>
 
-          <div className="w-full h-full bg-app-screen rounded-[44px] overflow-hidden flex flex-col justify-between pt-3 pb-3 px-6 text-white relative">
+          <div className="w-full h-full bg-app-screen sm:rounded-[44px] overflow-hidden flex flex-col pt-12 pb-8 sm:pt-3 sm:pb-3 px-6 text-white relative">
             
             <div>
-              <div className="flex items-center justify-between text-[13px] font-semibold tracking-tight px-3 pt-1 text-white select-none">
+              <div className="hidden sm:flex items-center justify-between text-[13px] font-semibold tracking-tight px-3 pt-1 text-white select-none">
                 <span>{time}</span>
 
                 <div className="w-[88px] h-[24px] bg-black rounded-full flex items-center justify-end pr-2 gap-1.5 ring-1 ring-[#1a1a1a]">
@@ -144,14 +144,14 @@ function Register() {
 
               <div className="text-center pt-2">
                 <span className="text-[11px] text-white">
-                  {t('hasAccount')} <Link to="/" className="text-app-yellow font-semibold hover:underline">{t('login')}</Link>
+                  {t('hasAccount')} <Link to="/login" className="text-app-lime font-semibold hover:underline">{t('signIn')}</Link>
                 </span>
               </div>
 
             </div>
 
-            <div className="pt-2 pb-1">
-              <div className="w-32 h-[4.5px] bg-white rounded-full mx-auto"></div>
+            <div className="hidden sm:flex justify-center pt-2 pb-1">
+              <div className="w-[120px] h-[5px] bg-[#3b3c40] rounded-full"></div>
             </div>
 
           </div>
