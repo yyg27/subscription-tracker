@@ -12,11 +12,22 @@ const translations = {
     hasAccount: "Already have an account?",
     signIn: 'Sign In',
     createAccount: 'Create Account',
+    welcomeDesc: 'Welcome Back! Ready To Manage Payments?',
+    forgetPass: 'Forget Password?',
+    or: 'Or',
+    continueApple: 'Continue With Apple',
+    continueGoogle: 'Continue With Google',
+    registerDesc: 'Create An Account Now Start Managing Payments!',
+    agreeTerms: 'I agree to',
+    terms: 'Terms',
+    and: 'and',
+    privacy: 'Privacy Policy.',
     
     // Dashboard
     mySubs: 'My Subscriptions',
     logout: 'Logout',
     addNew: 'Add New Subscription',
+    trackService: 'Track a new service in seconds.',
     platformPlaceholder: 'Platform (e.g. Netflix)',
     pricePlaceholder: 'Price (e.g. 100)',
     monthly: 'Monthly',
@@ -32,6 +43,7 @@ const translations = {
     category: 'Category',
     status: 'Status',
     nextRenewal: 'Next Renewal',
+    startDate: 'Start Date',
     deleteBtn: 'Delete',
     areYouSure: 'Are you sure?',
     successAdd: 'Subscription added!',
@@ -48,11 +60,22 @@ const translations = {
     hasAccount: "Zaten hesabın var mı?",
     signIn: 'Giriş Yap',
     createAccount: 'Hesap Oluştur',
+    welcomeDesc: "Tekrar Hoş Geldin! Ödemeleri Yönetmeye Hazır mısın?",
+    forgetPass: 'Şifremi Unuttum?',
+    or: 'Veya',
+    continueApple: 'Apple ile Devam Et',
+    continueGoogle: 'Google ile Devam Et',
+    registerDesc: 'Hemen Hesap Aç ve Aboneliklerini Yönet!',
+    agreeTerms: 'Kabul ediyorum:',
+    terms: 'Şartlar',
+    and: 've',
+    privacy: 'Gizlilik Politikası.',
     
     // Dashboard
     mySubs: 'Aboneliklerim',
     logout: 'Çıkış Yap',
     addNew: 'Yeni Abonelik Ekle',
+    trackService: 'Yeni bir servisi saniyeler içinde takibe al.',
     platformPlaceholder: 'Platform (Örn: Netflix)',
     pricePlaceholder: 'Fiyat (Örn: 100)',
     monthly: 'Aylık',
@@ -68,6 +91,7 @@ const translations = {
     category: 'Kategori',
     status: 'Durum',
     nextRenewal: 'Sonraki Yenileme',
+    startDate: 'Başlangıç Tarihi',
     deleteBtn: 'Sil',
     areYouSure: 'Emin misin?',
     successAdd: 'Abonelik eklendi!',
@@ -93,10 +117,10 @@ export const LanguageProvider = ({ children }) => {
 
   return (
     <LanguageContext.Provider value={{ lang, toggleLanguage, t }}>
-      <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+      <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 50 }}>
         <button 
           onClick={toggleLanguage} 
-          style={{ padding: '5px 10px', cursor: 'pointer', background: '#eee', border: '1px solid #ccc', borderRadius: '4px' }}
+          className="px-4 py-2 bg-app-inputBg hover:bg-app-inputHover text-white text-[12px] font-bold rounded-full ring-1 ring-white/10 transition-colors shadow-phone cursor-pointer"
         >
           {lang === 'en' ? '🇹🇷 TR' : '🇬🇧 EN'}
         </button>
