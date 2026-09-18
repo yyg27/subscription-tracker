@@ -29,7 +29,7 @@ export const sendEmail = async ({to,type,subs}) =>{
 
     }
 
-    transporter.sendEmail(mailOptions,(error,info)=>{
+    transporter.sendMail(mailOptions,(error,info)=>{
         if(error) return console.log(error,"Error sending email")
             
     })

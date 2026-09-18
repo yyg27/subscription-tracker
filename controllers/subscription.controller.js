@@ -1,7 +1,6 @@
 import { workflowClient } from "../config/upstash.js";
 import Subscription from "../models/subscription.model.js";
 import { SERVER_URL } from "../config/env.js";
-import { application } from "express";
 
 export const createSubscription = async (req, res, next) => {
   try {
@@ -10,19 +9,16 @@ export const createSubscription = async (req, res, next) => {
       user: req.user._id,
     });
 
-    const { workflowRunId } = await workflowClient.trigger(
-      { url, body, headers, workflowRunId, retries },
-      {
-        url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
-        body: { subscriptionId: subscription._id },
-        headers: {
-          "content-type": application / json,
-        },
-        retries: 0,
-      }
-    );
+    const { workflowRunId } = await workflowClient.trigger({
+      url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
+      body: { subscriptionId: subscription._id },
+      headers: {
+        "content-type": "application/json",
+      },
+      retries: 0,
+    });
 
-    res.status(201).json({ succes: true, data: subscription }); //if the user is authorized we validate the request
+    res.status(201).json({ success: true, data: subscription }); 
   } catch (error) {
     next(error);
   }
@@ -30,19 +26,20 @@ export const createSubscription = async (req, res, next) => {
 
 export const getUserSubscriptions = async (req, res, next) => {
   try {
-    //checks if the user ID in the request is the same as the user ID in the token
-
-    console.log(req.user._id, req.params.id); //check if there is a match
-
     if (req.user._id.toString() !== req.params.id) {
       return res
         .status(401)
         .json({ success: false, message: "Unauthorized!! User's don't match" });
     }
-    //find all subscriptions that belong to the user's ID
-    const subscriptions = await Subscription.find({ user: req.params.id });
+    
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parseInt(req.query.page, 10) || 1;
 
-    res.status(200).json({ success: true, data: subscriptions });
+    const subscriptions = await Subscription.find({ user: req.params.id })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({ success: true, data: subscriptions, page, limit });
   } catch (error) {
     next(error);
   }
@@ -50,8 +47,14 @@ export const getUserSubscriptions = async (req, res, next) => {
 
 export const getAllSubscriptions = async (req, res, next) => {
   try {
-    const allSubscriptions = await Subscription.find();
-    res.status(200).json({ success: true, data: allSubscriptions });
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parseInt(req.query.page, 10) || 1;
+
+    const allSubscriptions = await Subscription.find()
+      .skip((page - 1) * limit)
+      .limit(limit);
+      
+    res.status(200).json({ success: true, data: allSubscriptions, page, limit });
   } catch (error) {
     next(error);
   }
@@ -133,7 +136,7 @@ export const cancelSubscription = async (req, res, next) => {
     );
 
      // If subscription not found, return a 404 error
-     if (!canceledSubscription) {
+     if (!canceledSubs) {
       return res.status(404).json({ message: "Subscription not found" });
     }
 
@@ -149,11 +152,16 @@ export const cancelSubscription = async (req, res, next) => {
 
 export const getUpcomingRenewals = async (req, res, next) => {
   try {
-    const upcomingRenewals = await Subscription.find({
-      renewalDate: { $gt: new Date() },//finds all subscriptions with renewal dates greater than today
-    });
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parseInt(req.query.page, 10) || 1;
 
-    res.status(200).json({ success: true, data: upcomingRenewals });
+    const upcomingRenewals = await Subscription.find({
+      renewalDate: { $gt: new Date() },
+    })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.status(200).json({ success: true, data: upcomingRenewals, page, limit });
   } catch (error) {
     next(error);
   }

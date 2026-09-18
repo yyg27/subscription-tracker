@@ -28,7 +28,7 @@ export const sendReminders = serve(async (context) => {
       await sleepUntilReminder(context, `${daysBefore} days`, reminderDate);
     }
 
-    await triggerReminder(context, `${daysBefore} days`);
+    await triggerReminder(context, `${daysBefore} days`, subscription);
   }
 });
 
@@ -43,12 +43,13 @@ const sleepUntilReminder = async (context, label, date) => {
   await context.sleepUntil(label, date.toDate());
 };
 
-const triggerReminder = async (context, label) => {
-  return await context.run("label", () => {
+const triggerReminder = async (context, label, subscription) => {
+  return await context.run(label, async () => {
     console.log(`Triggering ${label} reminder`);
-    sendEmail({
-      to:subscription.user.email,
-      type:reminder.label.subscription,
+    await sendEmail({
+      to: subscription.user.email,
+      type: `${label} remaining`,
+      subs: subscription,
     });
   });
 };

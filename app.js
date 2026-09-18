@@ -1,5 +1,4 @@
 import express from 'express';
-import cookieParser from 'cookie-parser';
 
 import { PORT } from './config/env.js';
 
@@ -15,7 +14,6 @@ const app = express();
 
 app.use(express.json()); // built-in middleware to use json
 app.use(express.urlencoded({extended:false})); // 
-app.use(cookieParser()); // cookie parser middleware 
 app.use(arcjetMiddleware)
 
 app.use('/api/v1/auth',authRouter);
