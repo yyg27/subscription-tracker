@@ -95,19 +95,20 @@ export const updateSubscription = async (req, res, next) => {
     const { id } = req.params;
     const updatedSubscription = req.body;
 
-    const updateSubs = await Subscription.findByIdAndUpdate(
-      id,
+    // SECURITY FIX: Ensure user can only update their own subscription
+    const updateSubs = await Subscription.findOneAndUpdate(
+      { _id: id, user: req.user._id },
       updatedSubscription,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updateSubs) {
       return res
         .status(404)
-        .json({ success: false, message: "Subscription not found" });
+        .json({ success: false, message: "Subscription not found or unauthorized" });
     }
 
-    res.status(200).json({ succes: true, data: updateSubs });
+    res.status(200).json({ success: true, data: updateSubs });
   } catch (error) {
     next(error);
   }

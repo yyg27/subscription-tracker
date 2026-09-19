@@ -15,6 +15,18 @@ function Dashboard() {
   const [category, setCategory] = useState('movies');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
+  const [editingId, setEditingId] = useState(null);
+
+  const handleEditClick = (sub) => {
+    setEditingId(sub._id);
+    setName(sub.name);
+    setPrice(sub.price);
+    setCurrency(sub.currency);
+    setFrequency(sub.frequency);
+    setCategory(sub.category);
+    setStartDate(new Date(sub.startDate).toISOString().split('T')[0]);
+    if (sub.paymentMethod) setPaymentMethod(sub.paymentMethod);
+  };
 
   const fetchSubscriptions = () => {
     const token = localStorage.getItem('token');
@@ -45,13 +57,18 @@ function Dashboard() {
     navigate('/');
   };
 
-  const handleAddSubscription = async (e) => {
+  const handleSaveSubscription = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     
     try {
-      const response = await fetch('http://localhost:3000/api/v1/subscriptions', {
-        method: 'POST',
+      const url = editingId 
+        ? `http://localhost:3000/api/v1/subscriptions/${editingId}`
+        : 'http://localhost:3000/api/v1/subscriptions';
+      const method = editingId ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -72,6 +89,8 @@ function Dashboard() {
         fetchSubscriptions();
         setName('');
         setPrice('');
+        setPaymentMethod('');
+        setEditingId(null);
       } else {
         alert(data.message || t('error'));
       }
@@ -102,6 +121,19 @@ function Dashboard() {
     }
   };
 
+  const monthlyTotalsByCurrency = subscriptions.reduce((acc, sub) => {
+    if (sub.status !== 'active') return acc;
+    let amt = sub.price;
+    if (sub.frequency === 'yearly') amt /= 12;
+    else if (sub.frequency === 'weekly') amt *= 4.33;
+    else if (sub.frequency === 'daily') amt *= 30;
+    
+    // Fallback if currency is empty somehow, default to TL
+    const curr = sub.currency || 'TL';
+    acc[curr] = (acc[curr] || 0) + amt;
+    return acc;
+  }, {});
+
   return (
     <div className="font-sans flex items-center justify-center sm:p-8 lg:p-14 antialiased min-h-screen">
       
@@ -117,7 +149,7 @@ function Dashboard() {
             </p>
           </div>
 
-          <form onSubmit={handleAddSubscription} className="flex flex-col space-y-4">
+          <form onSubmit={handleSaveSubscription} className="flex flex-col space-y-4">
             
             <input 
               type="text" 
@@ -190,12 +222,28 @@ function Dashboard() {
               />
             </div>
             
-            <button 
-              type="submit" 
-              className="w-full bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[14px] py-4 rounded-full shadow-lime-btn transition-all mt-4"
-            >
-              {t('save')}
-            </button>
+            <div className="flex gap-3 mt-4">
+              {editingId && (
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setEditingId(null);
+                    setName('');
+                    setPrice('');
+                    setPaymentMethod('');
+                  }}
+                  className="w-1/3 bg-app-inputBg hover:bg-app-inputHover active:scale-[0.99] text-white font-bold text-[14px] py-4 rounded-full transition-all"
+                >
+                  Cancel
+                </button>
+              )}
+              <button 
+                type="submit" 
+                className={`${editingId ? 'w-2/3' : 'w-full'} bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[14px] py-4 rounded-full shadow-lime-btn transition-all`}
+              >
+                {editingId ? 'Update' : t('save')}
+              </button>
+            </div>
           </form>
         </div>
 
@@ -206,14 +254,37 @@ function Dashboard() {
         <div className="w-full xl:w-2/3 flex flex-col">
           
           {/* Header Row: Title & Logout */}
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-app-line mt-10 xl:mt-0">
-            <h1 className="text-2xl font-bold tracking-tight">{t('mySubs')}</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold text-white tracking-tight">{t('mySubs')} ({subscriptions.length})</h2>
             <button 
-              onClick={handleLogout} 
-              className="bg-app-inputBg hover:bg-app-inputHover text-white text-[12px] font-semibold py-2 px-5 rounded-full transition-colors ring-1 ring-[#3b3c40]"
+              onClick={handleLogout}
+              className="text-[12px] font-semibold text-[#ff453a] hover:text-[#ff6961] transition-colors bg-[#ff453a]/10 px-3 py-1.5 rounded-full"
             >
               {t('logout')}
             </button>
+          </div>
+
+          {/* Budget Summary Box */}
+          <div className="bg-app-phoneChassis/50 border border-white/5 rounded-2xl p-5 mb-6 flex items-center justify-between">
+            <div>
+              <p className="text-app-subtext text-xs font-semibold uppercase tracking-wider mb-1">{t('totalMonthly')}</p>
+              <div className="flex flex-wrap gap-x-5 gap-y-1">
+                {Object.keys(monthlyTotalsByCurrency).length === 0 ? (
+                  <h3 className="text-3xl font-bold text-app-lime">0</h3>
+                ) : (
+                  Object.entries(monthlyTotalsByCurrency).map(([curr, total]) => (
+                    <h3 key={curr} className="text-2xl sm:text-3xl font-bold text-app-lime">
+                      {total.toFixed(2)} <span className="text-lg text-app-lime/70">{curr}</span>
+                    </h3>
+                  ))
+                )}
+              </div>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-app-lime/10 flex items-center justify-center text-app-lime">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
           </div>
 
           {/* List Area */}
@@ -243,15 +314,26 @@ function Dashboard() {
                         </div>
                       </div>
                       
-                      <button 
-                        onClick={() => handleDelete(sub._id)} 
-                        className="text-app-subtext hover:text-[#ff453a] hover:bg-[#ff453a]/10 p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100"
-                        title={t('deleteBtn')}
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => handleEditClick(sub)} 
+                          className="text-app-subtext hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
+                          title="Edit"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(sub._id)} 
+                          className="text-app-subtext hover:text-[#ff453a] hover:bg-[#ff453a]/10 p-2 rounded-full transition-colors"
+                          title={t('deleteBtn')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
 
                     {/* Middle Row: Price & Frequency */}

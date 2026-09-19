@@ -13,7 +13,8 @@ export const {
   QSTASH_URL,
   QSTASH_TOKEN,
   SERVER_URL,
-  EMAIL_PASSWORD
+  EMAIL_PASSWORD,
+  EMAIL_USER
 } = process.env; //for exporting the variables from the env file
 
 

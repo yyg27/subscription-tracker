@@ -107,3 +107,64 @@ export const signOut = async (req, res, next) => {
 
 
  
+import transporter, { accountEmail } from "../config/nodemailer.js";
+import { SERVER_URL } from "../config/env.js";
+
+export const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      // Don't leak if email exists, just return success
+      return res.status(200).json({ success: true, message: "If an account exists, a reset email was sent." });
+    }
+
+    // Secret is specific to user's current password so the token dies when password changes
+    const secret = JWT_SECRET + user.password;
+    const token = jwt.sign({ email: user.email, id: user._id }, secret, { expiresIn: "15m" });
+    
+    // Hardcode local frontend URL for now, could use env var
+    const resetLink = `http://localhost:5173/reset-password?id=${user._id}&token=${token}`;
+
+    const mailOptions = {
+      from: accountEmail,
+      to: user.email,
+      subject: "Password Reset Request",
+      html: `<div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px;">
+        <h2>Password Reset</h2>
+        <p>You requested a password reset. Click the button below to set a new password. This link expires in 15 minutes.</p>
+        <a href="${resetLink}" style="display:inline-block;background:#9ef54c;color:#000;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;">Reset Password</a>
+        <p style="color:#666;font-size:12px;margin-top:20px;">If you didn't request this, you can safely ignore this email.</p>
+      </div>`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "If an account exists, a reset email was sent." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetPassword = async (req, res, next) => {
+  try {
+    const { id, token, newPassword } = req.body;
+    const user = await User.findById(id);
+    if (!user) throw new Error("Invalid or expired reset token");
+
+    const secret = JWT_SECRET + user.password;
+    try {
+      jwt.verify(token, secret);
+    } catch (err) {
+      throw new Error("Invalid or expired reset token");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.status(200).json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    error.statusCode = 400;
+    next(error);
+  }
+};
