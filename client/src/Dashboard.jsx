@@ -256,12 +256,20 @@ function Dashboard() {
           {/* Header Row: Title & Logout */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-white tracking-tight">{t('mySubs')} ({subscriptions.length})</h2>
-            <button 
-              onClick={handleLogout}
-              className="text-[12px] font-semibold text-[#ff453a] hover:text-[#ff6961] transition-colors bg-[#ff453a]/10 px-3 py-1.5 rounded-full"
-            >
-              {t('logout')}
-            </button>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => navigate('/profile')}
+                className="text-[12px] font-semibold text-white hover:text-white/80 transition-colors bg-white/10 px-3 py-1.5 rounded-full"
+              >
+                {t('profile')}
+              </button>
+              <button 
+                onClick={handleLogout}
+                className="text-[12px] font-semibold text-[#ff453a] hover:text-[#ff6961] transition-colors bg-[#ff453a]/10 px-3 py-1.5 rounded-full"
+              >
+                {t('logout')}
+              </button>
+            </div>
           </div>
 
           {/* Budget Summary Box */}

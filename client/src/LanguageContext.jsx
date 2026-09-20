@@ -52,6 +52,26 @@ const translations = {
     areYouSure: 'Are you sure?',
     successAdd: 'Subscription added!',
     error: 'An error occurred',
+
+    // Profile
+    profile: 'Profile',
+    backToDash: 'Back to Dashboard',
+    exportData: 'Export Data (CSV)',
+    language: 'Language',
+    changePass: 'Change Password',
+    oldPass: 'Old Password',
+    newPass: 'New Password',
+    updateAccount: 'Update Account',
+    deleteAccount: 'Delete Account',
+    notifications: 'Notifications',
+    emailReminders: 'Email Reminders',
+    settings: 'Settings',
+    appInterface: 'APP INTERFACE',
+    downloadBackup: 'DOWNLOAD BACKUP',
+    downloadCsv: 'Download CSV',
+    security: 'SECURITY',
+    dangerZone: 'DANGER ZONE',
+    deleteWarning: 'Permanently remove your account and all associated subscription data. This action cannot be undone.'
   },
   tr: {
     // Auth
@@ -104,6 +124,26 @@ const translations = {
     areYouSure: 'Emin misin?',
     successAdd: 'Abonelik eklendi!',
     error: 'Hata oluştu',
+
+    // Profile
+    profile: 'Profil',
+    backToDash: 'Panoya Dön',
+    exportData: 'Verileri Dışa Aktar (CSV)',
+    language: 'Dil',
+    changePass: 'Şifre Değiştir',
+    oldPass: 'Eski Şifre',
+    newPass: 'Yeni Şifre',
+    updateAccount: 'Hesabı Güncelle',
+    deleteAccount: 'Hesabı Sil',
+    notifications: 'Bildirimler',
+    emailReminders: 'E-posta Hatırlatıcıları',
+    settings: 'Ayarlar',
+    appInterface: 'UYGULAMA ARAYÜZÜ',
+    downloadBackup: 'YEDEK İNDİR',
+    downloadCsv: 'CSV İndir',
+    security: 'GÜVENLİK',
+    dangerZone: 'TEHLİKE BÖLGESİ',
+    deleteWarning: 'Hesabınızı ve ilişkili tüm abonelik verilerinizi kalıcı olarak siler. Bu işlem geri alınamaz.'
   }
 };
 
@@ -125,17 +165,10 @@ export const LanguageProvider = ({ children }) => {
 
   return (
     <LanguageContext.Provider value={{ lang, toggleLanguage, t }}>
-      <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 50 }}>
-        <button 
-          onClick={toggleLanguage} 
-          className="px-4 py-2 bg-app-inputBg hover:bg-app-inputHover text-white text-[12px] font-bold rounded-full ring-1 ring-white/10 transition-colors shadow-phone cursor-pointer"
-        >
-          {lang === 'en' ? '🇹🇷 TR' : '🇬🇧 EN'}
-        </button>
-      </div>
       {children}
     </LanguageContext.Provider>
   );
 };
 
 export const useLanguage = () => useContext(LanguageContext);
+
