@@ -1,3 +1,4 @@
+import { API_URL } from "./config";
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
@@ -21,7 +22,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/v1/auth/sign-up', {
+      const response = await fetch(`${API_URL}/auth/sign-up`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
@@ -144,7 +145,7 @@ function Register() {
 
               <div className="text-center pt-2">
                 <span className="text-[11px] text-white">
-                  {t('hasAccount')} <Link to="/login" className="text-app-lime font-semibold hover:underline">{t('signIn')}</Link>
+                  {t('hasAccount')} <Link to="/" className="text-app-yellow font-semibold hover:underline">{t('signIn')}</Link>
                 </span>
               </div>
 
