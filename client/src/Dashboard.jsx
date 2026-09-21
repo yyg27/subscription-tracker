@@ -139,7 +139,7 @@ function Dashboard() {
     <div className="font-sans flex items-center justify-center sm:p-8 lg:p-14 antialiased min-h-screen">
       
       {/* Main Dashboard Container */}
-      <div className="w-full h-full min-h-[100dvh] sm:min-h-0 max-w-5xl bg-app-screen sm:rounded-[44px] sm:shadow-phone sm:ring-1 sm:ring-white/10 p-6 pt-16 md:p-10 text-white flex flex-col xl:flex-row gap-10">
+      <div className="w-full h-full min-h-[100dvh] sm:min-h-0 sm:h-[730px] max-w-5xl bg-app-screen sm:rounded-[44px] sm:shadow-phone sm:ring-1 sm:ring-white/10 p-6 pt-16 md:p-10 text-white flex flex-col xl:flex-row gap-10">
         
         {/* LEFT COLUMN: Add Subscription Form */}
         <div className="w-full xl:w-1/3 flex flex-col">
@@ -150,7 +150,7 @@ function Dashboard() {
             </p>
           </div>
 
-          <form onSubmit={handleSaveSubscription} className="flex flex-col space-y-4">
+          <form onSubmit={handleSaveSubscription} className="flex flex-col space-y-4 animate-fade-in">
             
             <input 
               type="text" 
@@ -198,9 +198,18 @@ function Dashboard() {
               className="w-full bg-app-inputBg text-white text-[13px] px-5 py-3.5 rounded-full border-none transition-colors hover:bg-app-inputHover focus:ring-1 focus:ring-app-lime focus:outline-none appearance-none cursor-pointer"
             >
               <option value="movies">{t('movies')}</option>
+              <option value="series">{t('series')}</option>
+              <option value="documentary">{t('documentary')}</option>
               <option value="music">{t('music')}</option>
               <option value="games">{t('games')}</option>
               <option value="sports">{t('sports')}</option>
+              <option value="news">{t('news')}</option>
+              <option value="software">{t('software')}</option>
+              <option value="cloud">{t('cloud')}</option>
+              <option value="education">{t('education')}</option>
+              <option value="health">{t('health')}</option>
+              <option value="shopping">{t('shopping')}</option>
+              <option value="other">{t('other')}</option>
             </select>
 
             <input 
@@ -252,7 +261,7 @@ function Dashboard() {
         <div className="hidden xl:block w-[1px] bg-app-line self-stretch mx-4"></div>
 
         {/* RIGHT COLUMN: Subscriptions List */}
-        <div className="w-full xl:w-2/3 flex flex-col">
+        <div className="w-full xl:w-2/3 flex flex-col overflow-y-auto hide-scrollbar pb-10">
           
           {/* Header Row: Title & Logout */}
           <div className="flex justify-between items-center mb-6">
@@ -297,7 +306,7 @@ function Dashboard() {
           </div>
 
           {/* List Area */}
-          <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto pr-2 hide-scrollbar">
             {subscriptions.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-10 opacity-60">
                 <svg className="w-16 h-16 text-app-subtext mb-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -307,8 +316,12 @@ function Dashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {subscriptions.map(sub => (
-                  <div key={sub._id} className="bg-app-inputBg hover:bg-app-inputHover transition-colors rounded-[24px] p-5 flex flex-col ring-1 ring-white/5 relative group">
+                {subscriptions.map((sub, i) => (
+                  <div 
+                    key={sub._id} 
+                    className="bg-app-inputBg hover:bg-app-inputHover transition-colors rounded-[24px] p-5 flex flex-col ring-1 ring-white/5 relative group animate-slide-up"
+                    style={{ animationDelay: `${i * 60}ms` }}
+                  >
                     
                     {/* Top Row: Name & Delete */}
                     <div className="flex justify-between items-start mb-4">
@@ -323,7 +336,7 @@ function Dashboard() {
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <button 
                           onClick={() => handleEditClick(sub)} 
                           className="text-app-subtext hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
@@ -335,7 +348,7 @@ function Dashboard() {
                         </button>
                         <button 
                           onClick={() => handleDelete(sub._id)} 
-                          className="text-app-subtext hover:text-[#ff453a] hover:bg-[#ff453a]/10 p-2 rounded-full transition-colors"
+                          className="text-[#ff453a] bg-[#ff453a]/10 sm:text-app-subtext sm:bg-transparent hover:text-[#ff453a] hover:bg-[#ff453a]/10 p-2 rounded-full transition-colors"
                           title={t('deleteBtn')}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
