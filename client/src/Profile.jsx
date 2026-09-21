@@ -1,3 +1,4 @@
+import { API_URL } from "./config";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
@@ -23,7 +24,7 @@ function Profile() {
     }
     
     // Fetch user profile
-    fetch('http://localhost:3000/api/v1/users/me', {
+    fetch(`${API_URL}/users/me`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(res => res.json())
@@ -39,7 +40,7 @@ function Profile() {
   const handleExportCSV = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:3000/api/v1/subscriptions', {
+      const response = await fetch(`${API_URL}/subscriptions`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
@@ -70,7 +71,7 @@ function Profile() {
     setMsg('');
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:3000/api/v1/users/password', {
+      const response = await fetch(`${API_URL}/users/password`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -94,7 +95,7 @@ function Profile() {
     setTelegramMsg('');
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:3000/api/v1/users/me', {
+      const response = await fetch(`${API_URL}/users/me`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
@@ -113,7 +114,7 @@ function Profile() {
     if (!window.confirm(t('areYouSure'))) return;
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('http://localhost:3000/api/v1/users/me', {
+      const response = await fetch(`${API_URL}/users/me`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -146,7 +147,7 @@ function Profile() {
           
           <button 
             onClick={() => navigate('/dashboard')}
-            className="mt-auto w-full bg-white/10 hover:bg-white/20 active:scale-[0.99] text-white font-bold text-[14px] py-4 rounded-full transition-all flex items-center justify-center gap-2"
+            className="mt-auto w-full bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[14px] py-4 rounded-full transition-all flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
             {t('backToDash')}

@@ -1,3 +1,4 @@
+import { API_URL } from "./config";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from './LanguageContext';
@@ -30,7 +31,7 @@ function Dashboard() {
 
   const fetchSubscriptions = () => {
     const token = localStorage.getItem('token');
-    fetch('http://localhost:3000/api/v1/subscriptions', {
+    fetch(`${API_URL}/subscriptions`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
     .then(res => res.json())
@@ -63,8 +64,8 @@ function Dashboard() {
     
     try {
       const url = editingId 
-        ? `http://localhost:3000/api/v1/subscriptions/${editingId}`
-        : 'http://localhost:3000/api/v1/subscriptions';
+        ? `${API_URL}/subscriptions/${editingId}`
+        : `${API_URL}/subscriptions`;
       const method = editingId ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -105,7 +106,7 @@ function Dashboard() {
     
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/subscriptions/${id}`, {
+      const response = await fetch(`${API_URL}/subscriptions/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
