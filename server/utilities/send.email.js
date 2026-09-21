@@ -22,7 +22,7 @@ export const sendEmail = async ({to,type,subs}) =>{
     const subject = template.generateSubject(mailInfo);
 
     const mailOptions = {
-        form: accountEmail,
+        from: accountEmail,
         to: to,
         subject:subject,
         html:msg,
