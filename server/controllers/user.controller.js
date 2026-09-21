@@ -140,4 +140,21 @@ export const getMyProfile = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};export const updateMyProfile = async (req, res, next) => {
+  try {
+    const { telegramId } = req.body;
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    if (telegramId !== undefined) {
+      user.telegramId = telegramId;
+    }
+    await user.save();
+
+    res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    next(error);
+  }
 };

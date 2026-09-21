@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema(
       required: [true, "User password is required"],
       minLength: 6,
     },
+    telegramId: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   { timestamps: true }
 );

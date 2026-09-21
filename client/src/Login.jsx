@@ -125,9 +125,9 @@ function Login() {
                 </div>
 
                 <div className="text-right pt-0.5">
-                  <a href="#" className="text-app-yellow text-[11.5px] font-medium hover:opacity-90 transition-opacity">
+                  <Link to="/forgot-password" className="text-app-yellow text-[11.5px] font-medium hover:opacity-90 transition-opacity">
                     {t('forgetPass')}
-                  </a>
+                  </Link>
                 </div>
 
                 <button 

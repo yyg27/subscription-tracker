@@ -123,8 +123,8 @@ export const forgotPassword = async (req, res, next) => {
     const secret = JWT_SECRET + user.password;
     const token = jwt.sign({ email: user.email, id: user._id }, secret, { expiresIn: "15m" });
     
-    // Hardcode local frontend URL for now, could use env var
-    const resetLink = `http://localhost:5173/reset-password?id=${user._id}&token=${token}`;
+    const baseUrl = process.env.CLIENT_URL || "http://localhost:5173";
+    const resetLink = `${baseUrl}/reset-password?id=${user._id}&token=${token}`;
 
     const mailOptions = {
       from: accountEmail,

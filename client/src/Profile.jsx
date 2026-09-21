@@ -7,11 +7,13 @@ function Profile() {
   const { lang, toggleLanguage, t } = useLanguage();
   
   const [userName, setUserName] = useState('');
+  const [telegramId, setTelegramId] = useState('');
   const [activeTab, setActiveTab] = useState(null); // Accordion state
 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [msg, setMsg] = useState('');
+  const [telegramMsg, setTelegramMsg] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -26,7 +28,10 @@ function Profile() {
     })
     .then(res => res.json())
     .then(data => {
-      if (data.success) setUserName(data.data.name);
+      if (data.success) {
+        setUserName(data.data.name);
+        if (data.data.telegramId) setTelegramId(data.data.telegramId);
+      }
     })
     .catch(err => console.error(err));
   }, [navigate]);
@@ -81,6 +86,26 @@ function Profile() {
       }
     } catch (err) {
       setMsg(t('error'));
+    }
+  };
+
+  const handleSaveTelegram = async (e) => {
+    e.preventDefault();
+    setTelegramMsg('');
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/users/me', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({ telegramId })
+      });
+      const data = await response.json();
+      setTelegramMsg(data.success ? 'Saved' : t('error'));
+    } catch (err) {
+      setTelegramMsg(t('error'));
     }
   };
 
@@ -149,6 +174,43 @@ function Profile() {
               </button>
             </div>
 
+            {/* Telegram Accordion */}
+            <div className="bg-app-phoneChassis/50 border border-white/5 rounded-[24px] overflow-hidden">
+              <button 
+                onClick={() => toggleTab('telegram')}
+                className={`w-full p-5 flex items-center justify-between text-left transition-colors ${activeTab === 'telegram' ? '' : 'hover:bg-white/5'}`}
+              >
+                <div>
+                  <h3 className="font-bold text-white text-[15px]">{t('telegramReminders') || 'Telegram Reminders'}</h3>
+                  <span className="text-[11px] text-app-subtext font-medium mt-1 block tracking-wider">{t('notifications') || 'NOTIFICATIONS'}</span>
+                </div>
+                <div className="text-app-subtext">
+                  <svg className={`w-5 h-5 transition-transform ${activeTab === 'telegram' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                </div>
+              </button>
+              {activeTab === 'telegram' && (
+                <div className="p-5 pt-0">
+                  <form onSubmit={handleSaveTelegram} className="flex flex-col space-y-4">
+                    <p className="text-app-subtext text-xs">{t('telegramDesc') || 'Start a chat with your Telegram Bot to get your Chat ID, then save it here.'}</p>
+                    <input 
+                      type="text" 
+                      placeholder="Telegram Chat ID" 
+                      value={telegramId}
+                      onChange={e => setTelegramId(e.target.value)}
+                      className="w-full bg-app-screen text-white text-[13px] px-5 py-3.5 rounded-full border-none transition-colors focus:ring-1 focus:ring-app-lime focus:outline-none"
+                    />
+                    <button 
+                      type="submit" 
+                      className="w-full bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[14px] py-3.5 rounded-full shadow-lime-btn transition-all mt-2"
+                    >
+                      {t('save')}
+                    </button>
+                    {telegramMsg && <p className="text-center text-xs text-app-lime mt-1">{telegramMsg}</p>}
+                  </form>
+                </div>
+              )}
+            </div>
+            
             {/* Export Data Accordion */}
             <div className="bg-app-phoneChassis/50 border border-white/5 rounded-[24px] overflow-hidden">
               <button 
@@ -174,8 +236,9 @@ function Profile() {
                 </div>
               )}
             </div>
-            
+
             {/* Change Password Accordion */}
+
             <div className="bg-app-inputBg border border-white/5 rounded-[24px] overflow-hidden">
               <button 
                 onClick={() => toggleTab('password')}
