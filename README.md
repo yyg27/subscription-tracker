@@ -15,7 +15,7 @@ The project was built using the **MERN** stack (MongoDB, Express, React, Node.js
 
 ## Live Demo
 
-**[Coming Soon - Vercel/Render](#)**
+**[Frontend (Vercel)](https://subscription-tracker-zeta-lime.vercel.app/)** | **[Backend (Render)](https://subscription-tracker-oju4.onrender.com)**
 
 ----------
 
@@ -23,7 +23,8 @@ The project was built using the **MERN** stack (MongoDB, Express, React, Node.js
 
 - **Responsive Design:** Native full-screen PWA layout on mobile, physical titanium phone mockup on desktop.
 - **Dependency-Free Animations:** Custom HTML5 Canvas `BeamsBackground` ensuring smooth 60fps performance without heavy libraries like Framer Motion.
-- **Secure Authentication:** JWT-based user login and registration with Bcrypt password hashing and user-specific data isolation.
+- **Secure Authentication:** JWT-based user login, registration, and email-based password recovery via Nodemailer.
+- **Smart Notifications:** Automated Telegram reminders for upcoming subscription renewals driven by Upstash QStash.
 - **i18n Localization:** Native lightweight Context API for instant English / Turkish translations without external packages.
 - **Expense Dashboard:** Track active, cancelled, and expired subscriptions, view renewal dates, and monitor your total monthly wallet summary.
 - **Robust Backend:** Node.js/Express API with strict Mongoose schemas and graceful error handling for third-party workflows (Arcjet / Upstash).
@@ -57,8 +58,8 @@ Make sure you have **Node.js**, **npm**, and a **MongoDB** connection string.
 Clone the repository and install the dependencies for both client and server:
 
 ```bash
-git clone https://github.com/yyg27/subscription-tracker-backend.git
-cd subscription-tracker-backend
+git clone https://github.com/yyg27/subscription-tracker.git
+cd subscription-tracker
 
 # Install server dependencies
 cd server
@@ -83,6 +84,10 @@ ARCJET_ENV=development
 ARCJET_KEY=your_arcjet_key
 QSTASH_URL=your_qstash_url
 QSTASH_TOKEN=your_qstash_token
+EMAIL_USER=your_gmail_address
+EMAIL_PASSWORD=your_gmail_app_password
+CLIENT_URL=http://localhost:5173
+SERVER_URL=http://localhost:3000
 ```
 
 ### Development
