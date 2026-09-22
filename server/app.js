@@ -12,6 +12,7 @@ import arcjetMiddleware from './middlewares/arcjet.middleware.js';
 import workflowRouter from './routes/workflow.routes.js';
 
 const app = express();
+app.set("trust proxy", true); // Required for Render & Arcjet to read real IPs
 
 app.use(cors()); // Allow frontend to talk to backend
 app.use(express.json()); // built-in middleware to use json

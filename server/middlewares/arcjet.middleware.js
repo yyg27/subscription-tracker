@@ -7,10 +7,10 @@ const arcjetMiddleware = async (req, res, next) => {
       //if you try to spam GET requests to the server, you will be blocked
       if (decision.isDenied()) {
           if (decision.reason.isRateLimit()) {
-              res.status(429).send("Rate limit exceeded");
+              return res.status(429).send("Rate limit exceeded");
             }
       if (decision.reason.isBot()) {
-        res.status(403).send("Bot detected");
+        return res.status(403).send("Bot detected");
       }
       return res.status(403).send("ACCESS DENIED");
     }
