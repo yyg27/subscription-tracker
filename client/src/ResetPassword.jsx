@@ -6,6 +6,13 @@ import { useLanguage } from './LanguageContext';
 function ResetPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('token') || sessionStorage.getItem('token')) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+  
   const id = searchParams.get('id');
   const token = searchParams.get('token');
   

@@ -32,7 +32,7 @@ function Dashboard() {
   };
 
   const fetchSubscriptions = () => {
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     fetch(`${API_URL}/subscriptions`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
@@ -40,7 +40,7 @@ function Dashboard() {
     .then(data => {
       if (data.success) {
         setSubscriptions(data.data);
-      } else if (data.message === 'Unauthorized Token') {
+      } else if (data.message?.includes('Unauthorized')) {
         navigate('/');
       }
     })
@@ -48,7 +48,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
+    if (!(localStorage.getItem('token') || sessionStorage.getItem('token'))) {
       navigate('/');
       return;
     }
@@ -56,13 +56,13 @@ function Dashboard() {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token'); sessionStorage.removeItem('token');
     navigate('/');
   };
 
   const handleSaveSubscription = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     
     try {
       const url = editingId 
@@ -108,7 +108,7 @@ function Dashboard() {
   const handleDelete = async (id) => {
     if (!window.confirm(t('areYouSure'))) return;
     
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     try {
       const response = await fetch(`${API_URL}/subscriptions/${id}`, {
         method: 'DELETE',

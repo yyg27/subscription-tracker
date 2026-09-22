@@ -6,9 +6,17 @@ import { useLanguage } from './LanguageContext';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [time, setTime] = useState(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('token') || sessionStorage.getItem('token')) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+  
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -24,12 +32,16 @@ function Login() {
       const response = await fetch(`${API_URL}/auth/sign-in`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, rememberMe }),
       });
       
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('token', data.data.token);
+        if (rememberMe) {
+          localStorage.setItem('token', data.data.token);
+        } else {
+          sessionStorage.setItem('token', data.data.token);
+        }
         navigate('/dashboard');
       } else {
         alert(data.message || t('error'));
@@ -131,6 +143,18 @@ function Login() {
                   </Link>
                 </div>
 
+                <div className="flex items-center gap-2 mb-4 mt-2 px-1">
+                  <input 
+                    type="checkbox" 
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-600 bg-app-inputBg text-app-lime focus:ring-app-lime focus:ring-offset-app-screen accent-app-lime cursor-pointer"
+                  />
+                  <label htmlFor="rememberMe" className="text-[12.5px] text-app-subtext font-medium cursor-pointer select-none">
+                    {t('rememberMe') || 'Keep me signed in'}
+                  </label>
+                </div>
                 <button 
                   type="submit"
                   className="w-full bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[13.5px] py-3.5 rounded-full shadow-lime-btn transition-all mt-1"

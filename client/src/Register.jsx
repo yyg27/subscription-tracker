@@ -10,6 +10,13 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [time, setTime] = useState(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('token') || sessionStorage.getItem('token')) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+  
   const { t } = useLanguage();
 
   useEffect(() => {
@@ -30,7 +37,7 @@ function Register() {
       
       const data = await response.json();
       if (data.success) {
-        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('token', data.data.token); sessionStorage.removeItem('token');
         navigate('/dashboard');
       } else {
         alert(data.message || t('error'));

@@ -17,7 +17,7 @@ function Profile() {
   const [telegramMsg, setTelegramMsg] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     if (!token) {
       navigate('/');
       return;
@@ -38,7 +38,7 @@ function Profile() {
   }, [navigate]);
 
   const handleExportCSV = async () => {
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     try {
       const response = await fetch(`${API_URL}/subscriptions`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -69,7 +69,7 @@ function Profile() {
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setMsg('');
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     try {
       const response = await fetch(`${API_URL}/users/password`, {
         method: 'PUT',
@@ -93,7 +93,7 @@ function Profile() {
   const handleSaveTelegram = async (e) => {
     e.preventDefault();
     setTelegramMsg('');
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     try {
       const response = await fetch(`${API_URL}/users/me`, {
         method: 'PUT',
@@ -112,7 +112,7 @@ function Profile() {
 
   const handleDeleteAccount = async () => {
     if (!window.confirm(t('areYouSure'))) return;
-    const token = localStorage.getItem('token');
+    const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
     try {
       const response = await fetch(`${API_URL}/users/me`, {
         method: 'DELETE',
@@ -120,7 +120,7 @@ function Profile() {
       });
       const data = await response.json();
       if (data.success) {
-        localStorage.removeItem('token');
+        localStorage.removeItem('token'); sessionStorage.removeItem('token');
         navigate('/');
       } else {
         alert(data.message || t('error'));

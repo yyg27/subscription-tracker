@@ -34,7 +34,7 @@ export const signUp = async (req, res, next) => {
       { session }
     ); //we attached a session in case of something goes bad we can rollback the transaction
 
-    const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, {
+    const token = jwt.sign({ userID: newUsers[0]._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     }); //jwtSecret is a secret key that we will use to sign the token
 
@@ -59,7 +59,7 @@ export const signUp = async (req, res, next) => {
 
 export const signIn = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     //Check if the user exists
     const user = await User.findOne({ email });
 
@@ -79,8 +79,9 @@ export const signIn = async (req, res, next) => {
 
     //create a token if password is true
 
+    const expiry = rememberMe ? "365d" : JWT_EXPIRES_IN;
     const token = jwt.sign({ userID: user._id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
+      expiresIn: expiry,
     });
 
     res.status(200).json({
