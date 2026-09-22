@@ -7,7 +7,7 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [msg, setMsg] = useState('');
   const [time, setTime] = useState(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }));
-  const { t } = useLanguage();
+  const { lang, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -72,6 +72,13 @@ function ForgotPassword() {
                   </div>
                 </div>
               </div>
+
+              <button 
+                onClick={toggleLanguage} 
+                className="absolute top-6 right-6 sm:top-14 sm:right-10 px-3 py-1.5 bg-app-inputBg hover:bg-app-inputHover text-white text-[11px] font-bold rounded-full ring-1 ring-white/10 transition-colors cursor-pointer z-10"
+              >
+                {lang === 'en' ? '🇬🇧 EN' : '🇹🇷 TR'}
+              </button>
 
               <div className="text-center mt-10">
                 <h1 className="text-[26px] font-bold tracking-tight text-white">{t('forgotPassTitle')}</h1>

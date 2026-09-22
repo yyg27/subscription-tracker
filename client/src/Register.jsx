@@ -17,7 +17,7 @@ function Register() {
     }
   }, [navigate]);
   
-  const { t } = useLanguage();
+  const { lang, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -88,6 +88,13 @@ function Register() {
                   </div>
                 </div>
               </div>
+
+              <button 
+                onClick={toggleLanguage} 
+                className="absolute top-6 right-6 sm:top-14 sm:right-10 px-3 py-1.5 bg-app-inputBg hover:bg-app-inputHover text-white text-[11px] font-bold rounded-full ring-1 ring-white/10 transition-colors cursor-pointer z-10"
+              >
+                {lang === 'en' ? '🇬🇧 EN' : '🇹🇷 TR'}
+              </button>
 
               <div className="text-center mt-10">
                 <h2 className="text-[26px] font-bold tracking-tight text-white">{t('register')}</h2>
