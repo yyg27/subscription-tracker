@@ -199,23 +199,61 @@ function Profile() {
               </button>
               {activeTab === 'telegram' && (
                 <div className="p-5 pt-0">
-                  <form onSubmit={handleSaveTelegram} className="flex flex-col space-y-4">
-                    <p className="text-app-subtext text-xs">{t('telegramDesc') || 'Start a chat with your Telegram Bot to get your Chat ID, then save it here.'}</p>
-                    <input 
-                      type="text" 
-                      placeholder="Telegram Chat ID" 
-                      value={telegramId}
-                      onChange={e => setTelegramId(e.target.value)}
-                      className="w-full bg-app-screen text-white text-[13px] px-5 py-3.5 rounded-full border-none transition-colors focus:ring-1 focus:ring-app-lime focus:outline-none"
-                    />
-                    <button 
-                      type="submit" 
-                      className="w-full bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[14px] py-3.5 rounded-full shadow-lime-btn transition-all mt-2"
-                    >
-                      {t('save')}
-                    </button>
-                    {telegramMsg && <p className="text-center text-xs text-app-lime mt-1">{telegramMsg}</p>}
-                  </form>
+                  
+                  <div className="flex flex-col space-y-4">
+                    <p className="text-app-subtext text-xs">
+                      {telegramId 
+                        ? (t('telegram{t('connected') || 'Connected'}Desc') || 'Your Telegram is connected. You will receive reminders there.') 
+                        : (t('telegramDesc') || 'Connect your Telegram account to get subscription reminders.')}
+                    </p>
+                    
+                    {telegramId ? (
+                      <div className="flex items-center justify-between bg-app-screen px-5 py-3.5 rounded-full">
+                        <span className="text-white text-[13px] font-medium flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-app-lime"></span> Connected
+                        </span>
+                        <button 
+                          onClick={async () => {
+                            if(window.confirm(t('areYouSure'))) {
+                              const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
+                              await fetch(API_URL + '/users/me', {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                                body: JSON.stringify({ telegramId: '' })
+                              });
+                              setTelegramId('');
+                            }
+                          }}
+                          className="text-[#ff453a] text-xs font-bold hover:underline"
+                        >
+                          {t('disconnect') || 'Disconnect'}
+                        </button>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={async () => {
+                          try {
+                            const token = (localStorage.getItem('token') || sessionStorage.getItem('token'));
+                            const res = await fetch(API_URL + '/users/me', {
+                              headers: { 'Authorization': 'Bearer ' + token }
+                            });
+                            const data = await res.json();
+                            const uid = data.data._id;
+                            const botName = import.meta.env.VITE_TELEGRAM_BOT_USERNAME || 'SubTrackYYGBot';
+                            window.open(`https://t.me/${botName}?start=${uid}`, '_blank');
+                            alert(t('refreshPage') || 'After clicking Start in Telegram, refresh this page.');
+                          } catch(err) {
+                            console.error(err);
+                          }
+                        }}
+                        className="w-full bg-[#0088cc] hover:bg-[#0077b3] active:scale-[0.99] text-white font-bold text-[14px] py-3.5 rounded-full shadow-lg transition-all mt-2 flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.18-.08-.05-.19-.02-.27 0-.11.03-1.84 1.18-5.18 3.44-.49.34-.93.5-1.32.49-.43-.01-1.25-.24-1.86-.44-.75-.24-1.34-.37-1.29-.79.03-.22.33-.44.92-.68 3.6-1.57 6.01-2.61 7.23-3.12 3.44-1.43 4.15-1.68 4.62-1.69.1 0 .32.02.46.13.11.09.14.22.15.31.02.06.02.16.01.21z"/></svg>
+                        {t('connectTelegram') || 'Connect via Telegram'}
+                      </button>
+                    )}
+                  </div>
+
                 </div>
               )}
             </div>
