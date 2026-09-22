@@ -15,6 +15,7 @@ export const createSubscription = async (req, res, next) => {
         url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
         body: {
           subscriptionId: subscription._id,
+          reminderDays: subscription.reminderDays,
         },
         headers: {
           "content-type": "application/json",
@@ -22,6 +23,8 @@ export const createSubscription = async (req, res, next) => {
         retries: 0,
       });
       console.log(`Workflow triggered: ${workflowRunId}`);
+      subscription.workflowRunId = workflowRunId;
+      await subscription.save();
     } catch (workflowError) {
       console.error("Upstash Workflow Error (Ignored):", workflowError.message);
     }
@@ -95,6 +98,11 @@ export const updateSubscription = async (req, res, next) => {
     const { id } = req.params;
     const updatedSubscription = req.body;
 
+    const existingSub = await Subscription.findOne({ _id: id, user: req.user._id });
+    if (!existingSub) {
+      return res.status(404).json({ success: false, message: "Subscription not found or unauthorized" });
+    }
+    
     // SECURITY FIX: Ensure user can only update their own subscription
     const updateSubs = await Subscription.findOneAndUpdate(
       { _id: id, user: req.user._id },
@@ -102,11 +110,26 @@ export const updateSubscription = async (req, res, next) => {
       { new: true, runValidators: true }
     );
 
-    if (!updateSubs) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Subscription not found or unauthorized" });
+    // If workflow parameters changed, recreate the workflow
+    if (existingSub.workflowRunId && 
+       (existingSub.renewalDate.toString() !== updateSubs.renewalDate.toString() || 
+        JSON.stringify(existingSub.reminderDays) !== JSON.stringify(updateSubs.reminderDays))) {
+      try {
+        await workflowClient.cancel(existingSub.workflowRunId);
+        const { workflowRunId } = await workflowClient.trigger({
+          url: `${SERVER_URL}/api/v1/workflow/subscription/reminder`,
+          body: { subscriptionId: updateSubs._id, reminderDays: updateSubs.reminderDays },
+          headers: { "content-type": "application/json" },
+          retries: 0,
+        });
+        updateSubs.workflowRunId = workflowRunId;
+        await updateSubs.save();
+      } catch (err) {
+        console.error("Workflow Update Error:", err.message);
+      }
     }
+
+    
 
     res.status(200).json({ success: true, data: updateSubs });
   } catch (error) {
@@ -120,6 +143,9 @@ export const deleteSubscription = async (req,res,next) => {
 
     // SECURITY FIX: Make sure the subscription belongs to the logged-in user
     const deleteSubs = await Subscription.findOneAndDelete({ _id: id, user: req.user._id });
+    if (deleteSubs && deleteSubs.workflowRunId) {
+      try { await workflowClient.cancel(deleteSubs.workflowRunId); } catch (e) { console.error("Cancel Error:", e.message); }
+    }
 
     if(!deleteSubs){
       return res
@@ -138,6 +164,10 @@ export const cancelSubscription = async (req, res, next) => {
   try{
     const {id} = req.params; 
     //we updated the subscription's status to cancelled
+    const oldSub = await Subscription.findById(id);
+    if (oldSub && oldSub.workflowRunId) {
+      try { await workflowClient.cancel(oldSub.workflowRunId); } catch (e) { console.error("Cancel Error:", e.message); }
+    }
     const canceledSubs = await Subscription.findByIdAndUpdate(
       id,
       { status: "cancelled" },

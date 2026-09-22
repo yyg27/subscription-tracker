@@ -112,7 +112,7 @@ function ResetPassword() {
               </form>
               <div className="text-center pt-2">
                 <Link to="/" className="text-app-yellow text-[11.5px] font-medium hover:opacity-90 transition-opacity">
-                  Back to Login
+                  {t('backToLogin')}
                 </Link>
               </div>
             </div>

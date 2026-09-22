@@ -74,9 +74,9 @@ function ForgotPassword() {
               </div>
 
               <div className="text-center mt-10">
-                <h1 className="text-[26px] font-bold tracking-tight text-white">Reset Password</h1>
+                <h1 className="text-[26px] font-bold tracking-tight text-white">{t('forgotPassTitle')}</h1>
                 <p className="text-app-subtext text-[13px] font-medium mt-2 leading-snug">
-                  Enter your email to receive a reset link.
+                  {t('forgotPassDesc')}
                 </p>
               </div>
             </div>
@@ -104,7 +104,7 @@ function ForgotPassword() {
               </form>
               <div className="text-center pt-2">
                 <Link to="/" className="text-app-yellow text-[11.5px] font-medium hover:opacity-90 transition-opacity">
-                  Back to Login
+                  {t('backToLogin')}
                 </Link>
               </div>
             </div>

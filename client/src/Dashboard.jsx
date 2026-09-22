@@ -15,6 +15,7 @@ function Dashboard() {
   const [frequency, setFrequency] = useState('monthly');
   const [category, setCategory] = useState('movies');
   const [paymentMethod, setPaymentMethod] = useState('');
+  const [reminderDays, setReminderDays] = useState([7, 5, 2, 1]);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [editingId, setEditingId] = useState(null);
 
@@ -27,6 +28,7 @@ function Dashboard() {
     setCategory(sub.category);
     setStartDate(new Date(sub.startDate).toISOString().split('T')[0]);
     if (sub.paymentMethod) setPaymentMethod(sub.paymentMethod);
+    setReminderDays(sub.reminderDays?.length ? sub.reminderDays : [7, 5, 2, 1]);
   };
 
   const fetchSubscriptions = () => {
@@ -81,7 +83,8 @@ function Dashboard() {
           frequency,
           category,
           paymentMethod,
-          startDate
+          startDate,
+          reminderDays
         }),
       });
       
@@ -91,6 +94,7 @@ function Dashboard() {
         setName('');
         setPrice('');
         setPaymentMethod('');
+        setReminderDays([7, 5, 2, 1]);
         setEditingId(null);
       } else {
         alert(data.message || t('error'));

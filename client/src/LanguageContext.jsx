@@ -81,8 +81,19 @@ const translations = {
     downloadBackup: 'DOWNLOAD BACKUP',
     downloadCsv: 'Download CSV',
     security: 'SECURITY',
+    
     dangerZone: 'DANGER ZONE',
-    deleteWarning: 'Permanently remove your account and all associated subscription data. This action cannot be undone.'
+    deleteWarning: 'Permanently remove your account and all associated subscription data. This action cannot be undone.',
+    forgotPassTitle: 'Reset Password',
+    forgotPassDesc: 'Enter your email to receive a reset link.',
+    sendResetLink: 'Send Reset Link',
+    backToLogin: 'Back to Login',
+    resetPassTitle: 'Set New Password',
+    resetPassDesc: 'Enter your new password below.',
+    setNewPass: 'Set New Password',
+    remindMeBefore: 'Remind me before:',
+    days: 'days',
+    emailSent: 'Email sent'
   },
   tr: {
     // Auth
@@ -164,8 +175,19 @@ const translations = {
     downloadBackup: 'YEDEK İNDİR',
     downloadCsv: 'CSV İndir',
     security: 'GÜVENLİK',
+    
     dangerZone: 'TEHLİKE BÖLGESİ',
-    deleteWarning: 'Hesabınızı ve ilişkili tüm abonelik verilerinizi kalıcı olarak siler. Bu işlem geri alınamaz.'
+    deleteWarning: 'Hesabınızı ve ilişkili tüm abonelik verilerinizi kalıcı olarak siler. Bu işlem geri alınamaz.',
+    forgotPassTitle: 'Şifreyi Sıfırla',
+    forgotPassDesc: 'Sıfırlama bağlantısı almak için e-posta adresinizi girin.',
+    sendResetLink: 'Sıfırlama Linki Gönder',
+    backToLogin: 'Giriş Sayfasına Dön',
+    resetPassTitle: 'Yeni Şifre Belirle',
+    resetPassDesc: 'Aşağıya yeni şifrenizi girin.',
+    setNewPass: 'Yeni Şifreyi Kaydet',
+    remindMeBefore: 'Önceden hatırlat:',
+    days: 'gün',
+    emailSent: 'E-posta gönderildi'
   }
 };
 

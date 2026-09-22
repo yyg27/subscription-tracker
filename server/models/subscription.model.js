@@ -42,6 +42,8 @@ const subscriptionSchema = mongoose.Schema(
       ],
       required: true,
     },
+    reminderDays: { type: [Number], default: [7, 5, 2, 1] },
+    workflowRunId: { type: String },
     paymentMethod: {
       type: String,
       required: false,
