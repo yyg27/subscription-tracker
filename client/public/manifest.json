@@ -1,0 +1,16 @@
+{
+  "name": "SubTrack",
+  "short_name": "SubTrack",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#D3F546",
+  "description": "Manage your subscriptions elegantly.",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
