@@ -82,7 +82,12 @@ const translations = {
     downloadCsv: 'Download CSV',
     security: 'SECURITY',
     
+    
     dangerZone: 'DANGER ZONE',
+    updateSubscription: 'Update Subscription',
+    update: 'Update',
+    cancel: 'Cancel',
+    editTitle: 'Edit',
     deleteWarning: 'Permanently remove your account and all associated subscription data. This action cannot be undone.',
     forgotPassTitle: 'Reset Password',
     forgotPassDesc: 'Enter your email to receive a reset link.',
@@ -176,7 +181,12 @@ const translations = {
     downloadCsv: 'CSV İndir',
     security: 'GÜVENLİK',
     
+    
     dangerZone: 'TEHLİKE BÖLGESİ',
+    updateSubscription: 'Aboneliği Güncelle',
+    update: 'Güncelle',
+    cancel: 'İptal',
+    editTitle: 'Düzenle',
     deleteWarning: 'Hesabınızı ve ilişkili tüm abonelik verilerinizi kalıcı olarak siler. Bu işlem geri alınamaz.',
     forgotPassTitle: 'Şifreyi Sıfırla',
     forgotPassDesc: 'Sıfırlama bağlantısı almak için e-posta adresinizi girin.',

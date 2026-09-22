@@ -148,7 +148,7 @@ function Dashboard() {
         {/* LEFT COLUMN: Add Subscription Form */}
         <div className="w-full xl:w-1/3 flex flex-col">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-white">{t('addNew')}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-white">{editingId ? t('updateSubscription') : t('addNew')}</h1>
             <p className="text-app-subtext text-sm font-medium mt-2">
               {t('trackService')}
             </p>
@@ -246,16 +246,15 @@ function Dashboard() {
                     setPrice('');
                     setPaymentMethod('');
                   }}
-                  className="w-1/3 bg-app-inputBg hover:bg-app-inputHover active:scale-[0.99] text-white font-bold text-[14px] py-4 rounded-full transition-all"
-                >
-                  Cancel
+                  className="w-1/3 bg-app-inputBg hover:bg-app-inputHover active:scale-[0.99] text-white font-bold text-[14px] py-4 rounded-full transition-all">
+                  {t('cancel')}
                 </button>
               )}
               <button 
                 type="submit" 
                 className={`${editingId ? 'w-2/3' : 'w-full'} bg-app-lime hover:bg-app-limeHover active:scale-[0.99] text-black font-bold text-[14px] py-4 rounded-full shadow-lime-btn transition-all`}
               >
-                {editingId ? 'Update' : t('save')}
+                {editingId ? t('update') : t('save')}
               </button>
             </div>
           </form>
@@ -344,7 +343,7 @@ function Dashboard() {
                         <button 
                           onClick={() => handleEditClick(sub)} 
                           className="text-app-subtext hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors"
-                          title="Edit"
+                          title={t("editTitle")}
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />

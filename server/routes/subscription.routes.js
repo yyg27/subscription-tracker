@@ -13,7 +13,7 @@ import {
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get("/", getAllSubscriptions);//GET SUBSCRIPTONS
+subscriptionRouter.get("/", authorize, getAllSubscriptions);//GET SUBSCRIPTONS
 
 subscriptionRouter.get("/:id",authorize,getSubscriptionDetails);//GET SUBSCRIPTION DETAILS
 

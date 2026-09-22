@@ -61,7 +61,7 @@ export const getAllSubscriptions = async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const page = parseInt(req.query.page, 10) || 1;
 
-    const allSubscriptions = await Subscription.find()
+    const allSubscriptions = await Subscription.find({ user: req.user._id })
       .skip((page - 1) * limit)
       .limit(limit);
       
