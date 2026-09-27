@@ -86,6 +86,8 @@ QSTASH_URL=your_qstash_url
 QSTASH_TOKEN=your_qstash_token
 EMAIL_USER=your_gmail_address
 EMAIL_PASSWORD=your_gmail_app_password
+TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+VITE_TELEGRAM_BOT_USERNAME=your_telegram_bot_username
 CLIENT_URL=http://localhost:5173
 SERVER_URL=http://localhost:3000
 ```
