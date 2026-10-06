@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -7,9 +6,6 @@ import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 //req body ===>>> reg.body is an object that contains data from the client (POST request)
 
 export const signUp = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     //Create a new user by using req.body
     const { name, email, password } = req.body;
@@ -29,30 +25,21 @@ export const signUp = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, salt); //hashing the password
 
-    const newUsers = await User.create(
-      [{ name, email, password: hashedPassword }],
-      { session }
-    ); //we attached a session in case of something goes bad we can rollback the transaction
+    const newUser = await User.create({ name, email, password: hashedPassword });
 
-    const token = jwt.sign({ userID: newUsers[0]._id }, JWT_SECRET, {
+    const token = jwt.sign({ userID: newUser._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     }); //jwtSecret is a secret key that we will use to sign the token
-
-    await session.commitTransaction();
-    session.endSession();
 
     res.status(201).json({
       success: true,
       message: "User created successfully",
       data: {
         token,
-        user: newUsers[0],
+        user: newUser,
       },
     });
   } catch (error) {
-    // If an error occurs, abort the transaction and end session throw an error
-    await session.abortTransaction();
-    session.endSession();
     next(error);
   }
 };
@@ -100,7 +87,7 @@ export const signIn = async (req, res, next) => {
 //TODO: Implement the signOut controller function with Blacklist method
 export const signOut = async (req, res, next) => {
   try {
-    res.status(222).json({ success: true, message: "User logged out successfully" });
+    res.status(200).json({ success: true, message: "User logged out successfully" });
   } catch (error) {
     next(error);
   }

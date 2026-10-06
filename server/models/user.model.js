@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "User Email is required"],
       trim: true,
-      uniqe: true,
+      unique: true,
       lowercase: true,
       match: [/\S+@\S+\.\S+/, "Please fill a valid email adress"], //REGEX for email validation / voodoo magic
     },
@@ -28,7 +28,16 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    // never send the password hash in any JSON response
+    toJSON: {
+      transform: (doc, ret) => {
+        delete ret.password;
+        return ret;
+      },
+    },
+  }
 );
 
 const User = mongoose.model("User",userSchema);
